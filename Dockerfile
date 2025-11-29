@@ -33,12 +33,15 @@ COPY server ./server
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 USER nodejs
 
-# Expose port 5000
-EXPOSE 5000
+# Set default PORT for Cloud Run (8080)
+ENV PORT=8080
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:5000/api/wallet', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" || exit 1
+# Expose the port
+EXPOSE 8080
+
+# Health check - uses PORT env var
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:' + (process.env.PORT || 8080) + '/api/wallet', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" || exit 1
 
 # Use dumb-init to run the app
 ENTRYPOINT ["dumb-init", "--"]

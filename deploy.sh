@@ -59,12 +59,13 @@ gcloud run deploy $SERVICE_NAME \
   --image gcr.io/$PROJECT_ID/$IMAGE_NAME:latest \
   --platform managed \
   --region $REGION \
+  --port 8080 \
   --memory 512Mi \
   --cpu 1 \
   --timeout 60s \
   --max-instances 100 \
   --allow-unauthenticated \
-  --set-env-vars "NODE_ENV=production"
+  --set-env-vars "NODE_ENV=production,PORT=8080"
 
 # Get service URL
 echo -e "${YELLOW}Retrieving service URL...${NC}"
