@@ -228,7 +228,7 @@ export function TransferForm({ tokens, onSubmit, isSubmitting, gasEstimate, wall
               <Button 
                 type="submit" 
                 className="w-full gap-2" 
-                disabled={isSubmitting || insufficientBalance || !form.formState.isValid}
+                disabled={isSubmitting || insufficientBalance || !form.formState.isValid || !walletAddress}
                 data-testid="button-submit-transfer"
               >
                 {isSubmitting ? (

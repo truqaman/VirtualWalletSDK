@@ -22,9 +22,12 @@ export default function SendPage() {
 
   const transferMutation = useMutation({
     mutationFn: async (data: { token: 'ETH' | 'USDC'; amount: string; toAddress: string }) => {
+      if (!walletData?.address) {
+        throw new Error('Wallet not loaded');
+      }
       return apiRequest('POST', '/api/transfer', {
         ...data,
-        fromWalletAddress: walletData?.address,
+        fromWalletAddress: walletData.address,
       });
     },
     onSuccess: () => {
