@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 interface TokenIconProps {
-  token: 'ETH' | 'USDC';
+  token: 'USDQ' | 'USDC' | 'WETH' | 'OP' | 'YLP' | 'YL$' | 'eth' | 'usdc' | 'weth' | 'op' | 'ylp' | 'yl$' | 'usdq';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
 }
@@ -20,32 +20,57 @@ const fontSizeMap = {
   xl: 'text-sm',
 };
 
+const colorMap: Record<string, string> = {
+  'WETH': 'from-[#627EEA] to-[#3C5BE0]',
+  'weth': 'from-[#627EEA] to-[#3C5BE0]',
+  'ETH': 'from-[#627EEA] to-[#3C5BE0]',
+  'eth': 'from-[#627EEA] to-[#3C5BE0]',
+  'USDQ': 'from-[#2775CA] to-[#1E5FAA]',
+  'usdq': 'from-[#2775CA] to-[#1E5FAA]',
+  'USDC': 'from-[#2775CA] to-[#1E5FAA]',
+  'usdc': 'from-[#2775CA] to-[#1E5FAA]',
+  'OP': 'from-[#FF0420] to-[#CC0319]',
+  'op': 'from-[#FF0420] to-[#CC0319]',
+  'YLP': 'from-[#FFB800] to-[#FF9500]',
+  'ylp': 'from-[#FFB800] to-[#FF9500]',
+  'YL$': 'from-[#FFB800] to-[#FF9500]',
+  'yl$': 'from-[#FFB800] to-[#FF9500]',
+};
+
+const iconMap: Record<string, string> = {
+  'USDQ': 'UQ',
+  'usdq': 'UQ',
+  'USDC': '$',
+  'usdc': '$',
+  'WETH': 'Ξ',
+  'weth': 'Ξ',
+  'ETH': 'Ξ',
+  'eth': 'Ξ',
+  'OP': 'OP',
+  'op': 'OP',
+  'YLP': 'YL',
+  'ylp': 'YL',
+  'YL$': 'Y$',
+  'yl$': 'Y$',
+};
+
 export function TokenIcon({ token, size = 'md', className }: TokenIconProps) {
-  if (token === 'ETH') {
-    return (
-      <div 
-        className={cn(
-          sizeMap[size],
-          "rounded-full bg-gradient-to-br from-[#627EEA] to-[#3C5BE0] flex items-center justify-center",
-          className
-        )}
-        data-testid={`icon-token-${token.toLowerCase()}`}
-      >
-        <EthereumLogo className={cn("text-white", size === 'sm' ? 'w-3 h-3' : size === 'md' ? 'w-4 h-4' : size === 'lg' ? 'w-5 h-5' : 'w-6 h-6')} />
-      </div>
-    );
-  }
+  const bgGradient = colorMap[token] || colorMap['USDC'];
+  const icon = iconMap[token] || '$';
+  const useSymbol = ['USDQ', 'usdq', 'USDC', 'usdc', 'WETH', 'weth', 'ETH', 'eth', 'OP', 'op'].includes(token);
 
   return (
     <div 
       className={cn(
         sizeMap[size],
-        "rounded-full bg-gradient-to-br from-[#2775CA] to-[#1E5FAA] flex items-center justify-center",
+        `rounded-full bg-gradient-to-br ${bgGradient} flex items-center justify-center`,
         className
       )}
       data-testid={`icon-token-${token.toLowerCase()}`}
     >
-      <span className={cn("font-bold text-white", fontSizeMap[size])}>$</span>
+      <span className={cn("font-bold text-white", fontSizeMap[size])}>
+        {icon}
+      </span>
     </div>
   );
 }

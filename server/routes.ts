@@ -5,13 +5,13 @@ import { transferRequestSchema } from "@shared/schema";
 import { z } from "zod";
 
 const convertSchema = z.object({
-  fromToken: z.enum(['ETH', 'USDC']),
-  toToken: z.enum(['ETH', 'USDC']),
+  fromToken: z.enum(['USDQ', 'USDC', 'WETH', 'OP', 'YLP', 'YL$']),
+  toToken: z.enum(['USDQ', 'USDC', 'WETH', 'OP', 'YLP', 'YL$']),
   amount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0),
 });
 
 const withdrawSchema = z.object({
-  token: z.enum(['ETH', 'USDC']),
+  token: z.enum(['USDQ', 'USDC', 'WETH', 'OP', 'YLP', 'YL$']),
   amount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0),
   toAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
 });
@@ -96,7 +96,7 @@ export async function registerRoutes(
       }
 
       const amountValue = parseFloat(amount);
-      const currentBalance = token === 'ETH' 
+      const currentBalance = token === 'USDQ' 
         ? parseFloat(wallet.virtualEthBalance)
         : parseFloat(wallet.virtualUsdcBalance);
 
@@ -105,7 +105,7 @@ export async function registerRoutes(
       }
 
       const newBalance = (currentBalance - amountValue).toString();
-      if (token === 'ETH') {
+      if (token === 'USDQ') {
         await storage.updateWalletBalance(wallet.address, newBalance, wallet.virtualUsdcBalance);
       } else {
         await storage.updateWalletBalance(wallet.address, wallet.virtualEthBalance, newBalance);
@@ -165,9 +165,9 @@ export async function registerRoutes(
       const ethToUsdc = 2345.67;
       const usdcToEth = 1 / ethToUsdc;
 
-      if (fromToken === 'ETH') {
+      if (fromToken === 'USDQ') {
         if (amountValue > ethBalance) {
-          return res.status(400).json({ message: 'Insufficient ETH balance' });
+          return res.status(400).json({ message: 'Insufficient USDQ balance' });
         }
         const outputAmount = amountValue * ethToUsdc;
         await storage.updateWalletBalance(
@@ -228,7 +228,7 @@ export async function registerRoutes(
       }
 
       const amountValue = parseFloat(amount);
-      const currentBalance = token === 'ETH' 
+      const currentBalance = token === 'USDQ' 
         ? parseFloat(wallet.virtualEthBalance)
         : parseFloat(wallet.virtualUsdcBalance);
 
@@ -237,7 +237,7 @@ export async function registerRoutes(
       }
 
       const newBalance = (currentBalance - amountValue).toString();
-      if (token === 'ETH') {
+      if (token === 'USDQ') {
         await storage.updateWalletBalance(wallet.address, newBalance, wallet.virtualUsdcBalance);
       } else {
         await storage.updateWalletBalance(wallet.address, wallet.virtualEthBalance, newBalance);

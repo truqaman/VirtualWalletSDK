@@ -74,7 +74,7 @@ export interface TransferRequest {
 export interface TransactionDisplay {
   id: string;
   type: 'send' | 'receive' | 'convert' | 'withdraw';
-  tokenSymbol: 'ETH' | 'USDC';
+  tokenSymbol: 'USDQ' | 'USDC' | 'WETH' | 'OP' | 'YLP' | 'YL$';
   amount: string;
   toAddress?: string;
   fromAddress?: string;
@@ -99,7 +99,7 @@ export interface GasEstimate {
 }
 
 export const transferRequestSchema = z.object({
-  token: z.enum(['ETH', 'USDC']),
+  token: z.enum(['USDQ', 'USDC', 'WETH', 'OP', 'YLP', 'YL$']),
   amount: z.string().refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
     message: "Amount must be a positive number"
   }),
@@ -110,3 +110,99 @@ export const transferRequestSchema = z.object({
     message: "Invalid wallet address"
   }),
 });
+
+export interface TokenConfig {
+  symbol: string;
+  name: string;
+  decimals: number;
+  contracts: {
+    [network: string]: string;
+  };
+}
+
+export interface NetworkConfig {
+  name: string;
+  chainId: number;
+  rpcUrl: string;
+  explorerUrl: string;
+}
+
+export const TOKEN_CONFIGS: Record<string, TokenConfig> = {
+  USDQ: {
+    symbol: 'USDQ',
+    name: 'USDQ Token',
+    decimals: 6,
+    contracts: {
+      'optimism': '0x4b2842f382bfc19f409b1874c0480db3b36199b3',
+      'base': '0xbaf56ca7996e8398300d47f055f363882126f369',
+    },
+  },
+  YLP: {
+    symbol: 'YLP',
+    name: 'YILIP Token',
+    decimals: 18,
+    contracts: {
+      'base': '0xa2f42a3db5ff5d8ff45baff00dea8b67c36c6d1c',
+      'polygon': '0x7332b6e5b80c9dd0cd165132434ffabdbd950612',
+      'optimism': '0x25789bbc835a77bc4afa862f638f09b8b8fae201',
+    },
+  },
+  'YL$': {
+    symbol: 'YL$',
+    name: 'YULIP$ Token',
+    decimals: 18,
+    contracts: {
+      'polygon': '0x80df049656a6efa89327bbc2d159aa393c30e037',
+      'optimism': '0xc618101ad5f3a5d924219f225148f8ac1ad74dba',
+    },
+  },
+  USDC: {
+    symbol: 'USDC',
+    name: 'USD Coin',
+    decimals: 6,
+    contracts: {
+      'optimism': '0x0b2c639c533813f4aa9d7837caf62653d097ff85',
+      'base': '0x833589fcd6edb6e08f4c7c32d4f71b1566469c3d',
+      'polygon': '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+    },
+  },
+  WETH: {
+    symbol: 'WETH',
+    name: 'Wrapped Ethereum',
+    decimals: 18,
+    contracts: {
+      'optimism': '0x4200000000000000000000000000000000000006',
+      'base': '0x4200000000000000000000000000000000000006',
+      'polygon': '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+    },
+  },
+  OP: {
+    symbol: 'OP',
+    name: 'Optimism Token',
+    decimals: 18,
+    contracts: {
+      'optimism': '0x4200000000000000000000000000000000000042',
+    },
+  },
+};
+
+export const NETWORK_CONFIGS: Record<string, NetworkConfig> = {
+  optimism: {
+    name: 'OP Mainnet',
+    chainId: 10,
+    rpcUrl: 'https://mainnet.optimism.io',
+    explorerUrl: 'https://optimistic.etherscan.io',
+  },
+  base: {
+    name: 'Base Mainnet',
+    chainId: 8453,
+    rpcUrl: 'https://mainnet.base.org',
+    explorerUrl: 'https://basescan.org',
+  },
+  polygon: {
+    name: 'Polygon Mainnet',
+    chainId: 137,
+    rpcUrl: 'https://polygon-rpc.com',
+    explorerUrl: 'https://polygonscan.com',
+  },
+};

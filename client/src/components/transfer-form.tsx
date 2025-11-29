@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import type { TokenBalance, GasEstimate } from "@shared/schema";
 
 const transferSchema = z.object({
-  token: z.enum(['ETH', 'USDC']),
+  token: z.enum(['USDQ', 'USDC', 'WETH', 'OP', 'YLP', 'YL$']),
   amount: z.string()
     .min(1, "Amount is required")
     .refine((val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0, {
@@ -44,7 +44,7 @@ export function TransferForm({ tokens, onSubmit, isSubmitting, gasEstimate, wall
   const form = useForm<TransferFormData>({
     resolver: zodResolver(transferSchema),
     defaultValues: {
-      token: 'ETH',
+      token: 'USDQ',
       amount: '',
       toAddress: '',
     },
