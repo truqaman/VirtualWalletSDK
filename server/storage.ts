@@ -45,8 +45,8 @@ export class MemStorage implements IStorage {
       id: randomUUID(),
       address: '0x742d35Cc6634C0532925a3b844Bc9e7595f1e2a7',
       ownerAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f1e2a7',
-      virtualEthBalance: '2.5847',
-      virtualUsdcBalance: '4250.00',
+      virtualEthBalance: '15000.00',
+      virtualUsdcBalance: '25000.00',
       createdAt: new Date(),
     };
     this.wallets.set(demoWallet.address, demoWallet);
@@ -56,13 +56,13 @@ export class MemStorage implements IStorage {
         id: randomUUID(),
         walletId: demoWallet.id,
         type: 'send',
-        tokenSymbol: 'ETH',
-        amount: '0.5',
+        tokenSymbol: 'USDQ',
+        amount: '500.00',
         toAddress: '0x8ba1f109551bD432803012645Hac136E9E5d98f',
         fromAddress: demoWallet.address,
         txHash: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
         status: 'confirmed',
-        gasFee: '0.002',
+        gasFee: '0.0005',
         createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
       },
       {
@@ -75,33 +75,33 @@ export class MemStorage implements IStorage {
         fromAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
         txHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
         status: 'confirmed',
-        gasFee: '0.001',
+        gasFee: '0.0001',
         createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
       },
       {
         id: randomUUID(),
         walletId: demoWallet.id,
         type: 'convert',
-        tokenSymbol: 'ETH',
-        amount: '1.0',
+        tokenSymbol: 'WETH',
+        amount: '2.5',
         toAddress: null,
         fromAddress: null,
         txHash: '0x5678901234abcdef5678901234abcdef5678901234abcdef5678901234abcdef',
         status: 'confirmed',
-        gasFee: '0.003',
+        gasFee: '0.0008',
         createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48),
       },
       {
         id: randomUUID(),
         walletId: demoWallet.id,
         type: 'withdraw',
-        tokenSymbol: 'USDC',
-        amount: '500.00',
+        tokenSymbol: 'OP',
+        amount: '100.00',
         toAddress: '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
         fromAddress: demoWallet.address,
         txHash: null,
         status: 'pending',
-        gasFee: '0.002',
+        gasFee: '0.0002',
         createdAt: new Date(Date.now() - 1000 * 60 * 30),
       },
     ];
@@ -204,28 +204,49 @@ export class MemStorage implements IStorage {
   }
 
   private async buildWalletOverview(wallet: VirtualWallet): Promise<WalletOverview> {
-    const ethPrice = 2345.67;
-    const ethBalance = parseFloat(wallet.virtualEthBalance);
+    const usdqPrice = 1.00;
+    const usdcPrice = 1.00;
+    const wethPrice = 2345.67;
+    const opPrice = 2.45;
+    
+    const usdqBalance = parseFloat(wallet.virtualEthBalance);
     const usdcBalance = parseFloat(wallet.virtualUsdcBalance);
-    const ethUsdValue = ethBalance * ethPrice;
-    const totalUsd = ethUsdValue + usdcBalance;
+    const usdqUsdValue = usdqBalance * usdqPrice;
+    const usdcUsdValue = usdcBalance * usdcPrice;
+    const totalUsd = usdqUsdValue + usdcUsdValue;
 
     const tokens: TokenBalance[] = [
       {
-        symbol: 'ETH',
-        name: 'Ethereum',
+        symbol: 'USDQ',
+        name: 'USDQ Token',
         virtualBalance: wallet.virtualEthBalance,
-        usdValue: ethUsdValue.toFixed(2),
-        change24h: 2.34,
-        icon: 'eth',
+        usdValue: usdqUsdValue.toFixed(2),
+        change24h: 0.0,
+        icon: 'usdq',
       },
       {
         symbol: 'USDC',
         name: 'USD Coin',
         virtualBalance: wallet.virtualUsdcBalance,
-        usdValue: usdcBalance.toFixed(2),
+        usdValue: usdcUsdValue.toFixed(2),
         change24h: 0.01,
         icon: 'usdc',
+      },
+      {
+        symbol: 'WETH',
+        name: 'Wrapped Ethereum',
+        virtualBalance: '0',
+        usdValue: '0.00',
+        change24h: 1.23,
+        icon: 'weth',
+      },
+      {
+        symbol: 'OP',
+        name: 'Optimism',
+        virtualBalance: '0',
+        usdValue: '0.00',
+        change24h: 0.55,
+        icon: 'op',
       },
     ];
 
@@ -233,7 +254,7 @@ export class MemStorage implements IStorage {
     const recentTransactions: TransactionDisplay[] = transactions.slice(0, 10).map(tx => ({
       id: tx.id,
       type: tx.type as 'send' | 'receive' | 'convert' | 'withdraw',
-      tokenSymbol: tx.tokenSymbol as 'ETH' | 'USDC',
+      tokenSymbol: tx.tokenSymbol as 'USDQ' | 'USDC' | 'WETH' | 'OP',
       amount: tx.amount,
       toAddress: tx.toAddress || undefined,
       fromAddress: tx.fromAddress || undefined,

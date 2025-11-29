@@ -56,16 +56,16 @@ export type Transaction = typeof transactions.$inferSelect;
 
 // Frontend types for wallet operations
 export interface TokenBalance {
-  symbol: 'ETH' | 'USDC';
+  symbol: 'USDQ' | 'USDC' | 'WETH' | 'OP';
   name: string;
   virtualBalance: string;
   usdValue: string;
   change24h: number;
-  icon: 'eth' | 'usdc';
+  icon: 'usdq' | 'usdc' | 'weth' | 'op';
 }
 
 export interface TransferRequest {
-  token: 'ETH' | 'USDC';
+  token: 'USDQ' | 'USDC' | 'WETH' | 'OP';
   amount: string;
   toAddress: string;
   fromWalletAddress: string;

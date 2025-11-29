@@ -48,8 +48,10 @@ export default function SendPage() {
   });
 
   const tokens: TokenBalance[] = walletData?.tokens || [
-    { symbol: 'ETH', name: 'Ethereum', virtualBalance: '0', usdValue: '0', change24h: 0, icon: 'eth' },
+    { symbol: 'USDQ', name: 'USDQ Token', virtualBalance: '0', usdValue: '0', change24h: 0, icon: 'usdq' },
     { symbol: 'USDC', name: 'USD Coin', virtualBalance: '0', usdValue: '0', change24h: 0, icon: 'usdc' },
+    { symbol: 'WETH', name: 'Wrapped Ethereum', virtualBalance: '0', usdValue: '0', change24h: 0, icon: 'weth' },
+    { symbol: 'OP', name: 'Optimism', virtualBalance: '0', usdValue: '0', change24h: 0, icon: 'op' },
   ];
 
   const sendTransactions = transactions.filter(tx => tx.type === 'send');

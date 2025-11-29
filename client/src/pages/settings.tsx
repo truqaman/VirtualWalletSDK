@@ -22,7 +22,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [slippage, setSlippage] = useState('0.5');
-  const [network, setNetwork] = useState('mainnet');
+  const [network, setNetwork] = useState('optimism');
 
   return (
     <div className="space-y-6" data-testid="page-settings">
@@ -160,13 +160,12 @@ export default function SettingsPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="mainnet">Ethereum Mainnet</SelectItem>
-                  <SelectItem value="sepolia">Sepolia Testnet</SelectItem>
-                  <SelectItem value="goerli">Goerli Testnet</SelectItem>
+                  <SelectItem value="optimism">OP Mainnet</SelectItem>
+                  <SelectItem value="op-sepolia">OP Sepolia Testnet</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Select the Ethereum network for transactions.
+                Select the Optimism network for transactions.
               </p>
             </div>
           </CardContent>
