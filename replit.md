@@ -2,7 +2,7 @@
 
 ## Overview
 
-VaultX is a blockchain-based virtual wallet application that enables users to manage virtual ETH and USDC balances. The application provides functionality for transferring tokens to external wallets, converting between ETH and USDC, and tracking transaction history in real-time. Built with a modern full-stack architecture, it combines a React-based frontend with an Express backend and PostgreSQL database for persistent storage.
+VaultX is a production-ready blockchain virtual wallet DApp on OP Mainnet that enables users to manage virtual token balances (USDQ, USDC, WETH, OP) and transfer them to external wallets. The application integrates with smart contract 0x797ADa8Bca5B5Da273C0bbD677EBaC447884B23D using Alchemy's Modular Account SDK. Users can connect their wallet via Alchemy Signer, MetaMask, or other EVM wallets. Built with a modern full-stack architecture, it combines a React-based frontend with an Express backend.
 
 ## User Preferences
 
@@ -27,12 +27,16 @@ Preferred communication style: Simple, everyday language.
 **State Management**
 - TanStack Query (React Query) for server state management and caching
 - React Hook Form with Zod validation for form handling
-- Context API for theme management
+- Context API for theme management and wallet connection state
+- BrowserProvider from ethers v6 for blockchain interactions
 
 **Key Design Decisions**
 - Component-based architecture with separation between UI primitives and business logic components
 - Virtual wallet balances maintained separately from actual blockchain balances
 - Real-time transaction status tracking with pending, confirmed, and failed states
+- Wallet-first authentication: users must connect their wallet to access the dashboard
+- Signup page guards unauthenticated users; connects to Alchemy, MetaMask, or other EVM providers
+- Persistent wallet connection stored in localStorage
 
 ### Backend Architecture
 
@@ -86,15 +90,27 @@ Preferred communication style: Simple, everyday language.
 - Drizzle ORM for type-safe database queries and migrations
 - Connection string managed via `DATABASE_URL` environment variable
 
-**Blockchain Integration** (Prepared)
-- Smart contract ABI present in attached_assets for wallet interaction
+**Blockchain Integration**
+- Smart contract 0x797ADa8Bca5B5Da273C0bbD677EBaC447884B23D on OP Mainnet for wallet interaction
+- Alchemy Modular Account SDK (@alchemy/aa-core, @alchemy/aa-ethers) for account abstraction
+- ethers v6 (BrowserProvider) for blockchain RPC calls
+- Multi-network support: OP Mainnet (primary), Base Mainnet, Polygon Mainnet
+- Multi-token support with contract addresses configured per network:
+  - USDQ (6 decimals): OP 0x4b2842f382bfc19f409b1874c0480db3b36199b3, Base 0xbaf56ca7996e8398300d47f055f363882126f369
+  - YLP (18 decimals): Base, Polygon, OP
+  - YL$ (18 decimals): Polygon, OP
+  - USDC, WETH, OP: Standard addresses per network
 - External wallet address validation using Ethereum address format (0x + 40 hex characters)
 - Gas fee estimation system for transaction cost calculations
 - Transaction hash tracking for blockchain confirmation
 
-**Third-Party Services** (Future Integration Points)
-- Alchemy or similar blockchain node provider for actual blockchain interactions
-- Price feed APIs for real-time ETH/USDC conversion rates
+**Third-Party Services**
+- Alchemy API (ovF7P49HQUPcSHcMQjg9-) for blockchain node RPC and modular account SDK
+- Dune Analytics API for sim.dune.com integration
+  - SIM API: sim_ENa3Ba3ZTFAuA9LWa0jtmJhd8fMgDaJY
+  - CLI API: sim_InmhMna5dwtaGqJyM5FVXVFSQaqU3LfU
+  - IDX APP: sim_lwDjXWDdW9d4FLxz9N1fqvOW0ay2FBk1
+- Price feed APIs for real-time token conversion rates
 - Gas estimation services for accurate transaction fee calculations
 
 **Development Tools**
@@ -107,6 +123,33 @@ Preferred communication style: Simple, everyday language.
 - Session storage ready for multi-user authentication flows
 
 **Key Integration Patterns**
-- Environment-based configuration for database connections
+- Environment-based configuration for database connections and API keys (ALCHEMY_API_KEY, DUNE_* keys)
 - Separation of concerns between virtual balances (app-managed) and actual blockchain state
 - Mock data initialization for development and testing without blockchain dependency
+- Wallet context provider for centralized wallet state management
+- BrowserProvider connection abstraction for blockchain RPC calls
+- Signup page provides wallet connection UI before dashboard access
+
+## Recent Updates (Latest Session)
+
+### Changes Made
+1. **Network Migration**: Changed from Ethereum Mainnet to OP Mainnet
+2. **Token System**: Expanded from 2 tokens (ETH/USDC) to multi-token support:
+   - Primary: USDQ (6 decimals) on OP Mainnet (demo: 15,000 balance)
+   - Supporting: USDC, WETH, OP with OP Mainnet focus
+   - Future support: YLP, YL$ on Base/Polygon
+3. **Wallet Connection**: Implemented Alchemy wallet integration
+   - Created WalletProvider context (client/src/contexts/wallet-context.tsx)
+   - Installed packages: ethers v6, @alchemy/aa-core, @alchemy/aa-ethers
+   - Created signup page with wallet connection UI
+   - Updated routing: unauthenticated users redirected to signup
+   - Persistent wallet state in localStorage
+4. **API Credentials**: Added Alchemy and Dune API keys to project secrets
+5. **Smart Contract**: Configured for 0x797ADa8Bca5B5Da273C0bbD677EBaC447884B23D on OP Mainnet
+
+### Pages
+- `/` - Dashboard (requires wallet connection)
+- `/send` - Send tokens
+- `/transactions` - Transaction history
+- `/settings` - Wallet preferences
+- `/signup` - Wallet connection page (default for unauthenticated users)
