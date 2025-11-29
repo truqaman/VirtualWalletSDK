@@ -59,9 +59,12 @@ gcloud run deploy vaultx \
   --memory 512Mi \
   --cpu 1 \
   --timeout 60s \
-  --set-env-vars ALCHEMY_API_KEY=$ALCHEMY_API_KEY,DUNE_API_KEY=$DUNE_API_KEY,DUNE_CLI_API_KEY=$DUNE_CLI_API_KEY,DUNE_SIM_API_KEY=$DUNE_SIM_API_KEY,SESSION_SECRET=$SESSION_SECRET,DATABASE_URL=$DATABASE_URL \
+  --port 8080 \
+  --set-env-vars ALCHEMY_API_KEY=$ALCHEMY_API_KEY,DUNE_API_KEY=$DUNE_API_KEY,DUNE_CLI_API_KEY=$DUNE_CLI_API_KEY,DUNE_SIM_API_KEY=$DUNE_SIM_API_KEY,SESSION_SECRET=$SESSION_SECRET,DATABASE_URL=$DATABASE_URL,PORT=8080 \
   --allow-unauthenticated
 ```
+
+**Note:** The `PORT=8080` environment variable is required by Google Cloud Run. The Dockerfile now defaults to this port.
 
 Or use secrets for sensitive values (recommended for production):
 
