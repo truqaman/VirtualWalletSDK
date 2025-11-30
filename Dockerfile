@@ -43,6 +43,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://localhost:' + (process.env.PORT || 8080) + '/api/wallet', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})" || exit 1
 
-# Use dumb-init to run the app
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "run", "dev"]
+# Run the app in production mode
+CMD ["npm", "start"]
