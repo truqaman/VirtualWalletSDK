@@ -146,6 +146,13 @@ Preferred communication style: Simple, everyday language.
    - Persistent wallet state in localStorage
 4. **API Credentials**: Added Alchemy and Dune API keys to project secrets
 5. **Smart Contract**: Configured for 0x797ADa8Bca5B5Da273C0bbD677EBaC447884B23D on OP Mainnet
+6. **GitHub Actions CI/CD**: Created professional deployment workflows
+   - `docker-image.yml` - Builds Docker image, pushes to GCR, scans for vulnerabilities
+   - Triggers on push to main/develop branches
+   - Smart tagging strategy: `latest`, `production`, `develop` tags
+   - Trivy vulnerability scanning integrated
+   - Multi-stage Docker build with layer caching
+   - Pull request builds (no push)
 
 ### Pages
 - `/` - Dashboard (requires wallet connection)
@@ -153,3 +160,8 @@ Preferred communication style: Simple, everyday language.
 - `/transactions` - Transaction history
 - `/settings` - Wallet preferences
 - `/signup` - Wallet connection page (default for unauthenticated users)
+
+### GitHub Actions Workflows
+- **docker-image.yml**: Builds and pushes Docker images to GCR with vulnerability scanning
+- Repository: https://github.com/truqaman/VirtualWalletSDK
+- Actions tab: https://github.com/truqaman/VirtualWalletSDK/actions
